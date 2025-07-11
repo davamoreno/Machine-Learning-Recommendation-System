@@ -19,7 +19,7 @@ def build_and_save_recommendation():
         return
     produk_features = pd.read_sql("""
                                     SELECT p.id as produk_id, p.kategori_id,
-                                    t.id as tag_id, FROM produks p
+                                    t.id as tag_id FROM produks p
                                     LEFT JOIN produk_tag pt ON p.id = pt.produk_id
                                     LEFT JOIN tags t ON pt.tag_id = t.id
                                 """, engine)
@@ -67,7 +67,7 @@ def build_and_save_recommendation():
             conn.execute(text("TRUNCATE TABLE user_dashboard_recommendations"))
             conn.commit()
         
-        final_recs_df[['user_id', 'produk_id', 'score']].to_sql('user_dashboard_recommendations', engine, if_exists='append', index=False)
+        final_recs_df[['user_id', 'produk_id', 'score', 'created_at', 'updated_at']].to_sql('user_dashboard_recommendations', engine, if_exists='append', index=False)
         
         print(f"[{time.ctime()}] Rekomendasi berhasil disimpan ke database.")
     else:
